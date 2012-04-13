@@ -314,7 +314,8 @@
 	maximosDiasConsecutivosSinGanar(j, p) \geq maximosDiasConsecutivosSinGanar(j, p2)]}
 	
 	\vspace{5mm}
-	\aux{maximosDiasConsecutivosSinGanar}{j: JJOO, p: Pais}{\ent}{max([|victorias(j, p)[x..y]| \hspace{1mm} | x, y \leftarrow [0..|victorias(j, p)|), x \leq y, (\forall v \leftarrow victorias(j, p)[x..y])v == False])}
+	\aux{maximosDiasConsecutivosSinGanar}{j: JJOO, p: Pais}{\ent}{ \newline
+	max([|victorias(j, p)[x..y]| \hspace{1mm} | x, y \leftarrow [0..|victorias(j, p)|), x \leq y, (\forall v \leftarrow victorias(j, p)[x..y])v == False])}
 	\aux{victorias}{j: JJOO, p: Pais}{[\bool]}{[ganoEnTalDia(j, d, p) | d \leftarrow [1..jornadaActual(j)]]}
 	\aux{ganoEnTalDia}{j: JJOO, d: \ent, p: Pais}{\bool}{(\exists c \leftarrow cronograma(j, d), finalizada(c)) \newline
 	p \in [nacionalidad(ranking(c)[i]) | i \leftarrow [0..min(3, |ranking(c)|))]}
@@ -334,15 +335,24 @@
 	\asegura[competenciasFinalizadasEnElDiaNoSeTocan]{\newline
 	(\forall c1 \leftarrow cronograma(pre(j), jornadaActual(pre(j))), finalizada(c1)) \newline
 	(\exists c2 \leftarrow cronograma(j, jornadaActual(pre(j))))sonCompetenciasIguales(c1, c2)}
+	
 	\asegura[cambiosEnCompetenciasNoFinalizadasEnElDia]{ \newline
-	(\forall c1 \leftarrow cronograma(pre(j), jornadaActual(pre(j))), \lnot finalizada(c1)) \newline
-	(\exists c2 \leftarrow cronograma(j, jornadaActual(pre(j))))(categoria(c1) == categoria(c2)) \land \newline
-	mismos(participantes(c1), participantes(c2)) \land finalizada(c2) \land (|lesTocoControlAntiDoping(c2)| == 1) \land \newline
-	rankingDeCompetencia(c2))}
+		(\forall c1 \leftarrow cronograma(pre(j), jornadaActual(pre(j))), \lnot finalizada(c1)) \newline
+		\hspace*{5mm}	(\exists c2 \leftarrow cronograma(j, jornadaActual(pre(j))))\newline
+		\hspace*{10mm}		(categoria(c1) == categoria(c2)) \land \newline
+		\hspace*{10mm}		mismos(participantes(c1), participantes(c2)) \land \newline
+		\hspace*{10mm}		finalizada(c2) \land \newline
+		\hspace*{10mm}		(|lesTocoControlAntiDoping(c2)| == 1) \land \newline
+		\hspace*{10mm}		rankingDeCompetencia(c2))
+	}
+	
 	\asegura[menosDel5PorcientoPositivo]{\newline
-		100*|distintos([atle \hspace{1mm} | compe \leftarrow listaDeCompetenciasConCat(j, listaDeCategoriasNoFinalizadasDeCompetencias\newline Viejas(pre(j))),\newline 
-		atle \leftarrow lesTocoControlAntiDoping(compe), leDioPositivo(compe, atle)])| \leq \newline
-		5* |distintos([atle \hspace{1mm} | compe \leftarrow listaDeCompetenciasConCat(j, listaDeCategoriasNoFinalizadasDeCompetencias\newline Viejas(pre(j))),\newline
+		100*|distintos([atle \hspace{1mm} | compe \leftarrow \newline
+		listaDeCompetenciasConCat(j, listaDeCategoriasNoFinalizadasDeCompetenciasViejas(pre(j))),\newline 
+		atle \leftarrow lesTocoControlAntiDoping(compe), leDioPositivo(compe, atle)])|
+		\leq \newline
+		5* |distintos([atle \hspace{1mm} | compe \leftarrow \newline
+		listaDeCompetenciasConCat(j, listaDeCategoriasNoFinalizadasDeCompetencias\newline Viejas(pre(j))),\newline
 		atle \leftarrow lesTocoControlAntiDoping(compe)])|
 	}
 	
