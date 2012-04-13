@@ -256,7 +256,7 @@
 	[categoria(x)| x \leftarrow cronograma(j, jornadaActual(j)), finalizada(x)]}
 	\aux{listaDeCompenteciasConCat}{j: JJOO, categorias: [(Deporte, Sexo)]}{[Categoria]}{\newline
 	[x | x \leftarrow competencias(j), categoria(x) \in categorias]}
-	\aux{rankingDeCompetencia}{c: Competencia}{\bool}{(\forall i \leftarrow [0..|ranking(c)|-1))capacidad(ranking(c)[i], prm(c)) \geq capacidad(ranking(c)[i+1], prm(c))}
+	\aux{rankingDeCompetencia}{c: Competencia}{\bool}{(|ranking(c)| > 1)\rightarrow(\forall i \leftarrow [0..|ranking(c)|-1))capacidad(ranking(c)[i], prm(c)) \geq capacidad(ranking(c)[i+1], prm(c))}
 	
 \end{problema}
 	
