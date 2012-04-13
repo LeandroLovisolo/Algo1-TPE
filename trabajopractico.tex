@@ -195,7 +195,7 @@
 		\hspace*{15mm}			leDioPositivoIgualEnCompetencias(c1, c2))
 	}
 
-
+	\vspace{5mm}
 
 \aux{atletasIgualesExceptoUnAtletaQueSeCambia}{c1, c2: Competencia, a : Atleta}{bool}{\newline(\forall p1 \leftarrow participantes(c1))\newline
 \hspace*{5mm}(\forall p1 \leftarrow participantes(c1))\newline
@@ -214,8 +214,30 @@
 
 %aux rankingIgualConAtletletaCambiado(compNueva:Competencia, compVieja:Competencia, a: Atleta, nacio : Pais): bool = 
 %(V y<-[0.. |ranking(compVieja)|)] if ranking(compVieja)[y] != a then ranking(compNueva)[y] == ranking(compVieja)[y] else  atletaIgualConNacionalidadCambiada(ranking(compNueva))[y], ranking(compVieja)[y], pais);
+
+
+
+\aux{atletaIgualConNacionalidadCambiada}{atNuevo, atViejo: Atleta, nacion:Pais}{Bool}{\newline
+	(ciaNumber(atNuevo) == ciaNumber(atViejo)) \land \newline
+	(nombre(atNuevo) == nombre(atViejo)) \land \newline
+	(sexo(atNuevo) == sexo(atViejo)) \land \newline
+	(a\tilde{n}oNacimiento(atNuevo) == a\tilde{n}oNacimiento(atViejo)) \land \newline
+	(deportes(atNuevo) == deportes(atViejo)) \land \newline
+	(nacionalidad(atNuevo) == nacion) \land \newline
+	(\forall d \leftarrow deportes(atNuevo)) \newline
+	\hspace*{5mm}	capacidad(atNuevo, d) == capacidad(atViejo, d)	
+}
+
+
 %aux atletaIgualConNacionalidadCambiada(atNuevo, atViejo: Atleta, nacion:Pais): bool =
-%(ciaNumber(atNuevo) == ciaNumber(atViejo)) && (nombre(atNuevo) == nombre(atViejo)) && (sexo(atNuevo) == sexo(atViejo)) && (añoNacimiento(atNuevo) == añoNacimiento(atViejo)) && (deportes(atNuevo) == deportes(atViejo)) && (nacionalidad(atNuevo) == nacion) && (V d<-deportes(atNuevo)) capacidad (atNuevo, d) == capacidad(atViejo, d);
+%	(ciaNumber(atNuevo) == ciaNumber(atViejo)) &&
+%	(nombre(atNuevo) == nombre(atViejo)) &&
+%	(sexo(atNuevo) == sexo(atViejo)) &&
+%	(añoNacimiento(atNuevo) == añoNacimiento(atViejo)) &&
+%	(deportes(atNuevo) == deportes(atViejo)) &&
+%	(nacionalidad(atNuevo) == nacion) &&
+%	(V d<-deportes(atNuevo))
+%		capacidad(atNuevo, d) == capacidad(atViejo, d)
 %}	
 
 	
