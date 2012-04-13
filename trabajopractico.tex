@@ -210,8 +210,17 @@
 
 %aux leDioPositivoIgualEnCompetencias(c1:Competencia, c2:Competencia) :bool = (V p1<- lesTocoControlAntiDoping(c1)) (E p2<-lesTocoControlAntiDoping(c2), ciaNumber(p1) == ciaNumber(p2)) leDioPositivo(c1,p1) == leDioPositivo(c2,p2); 
 
-%aux rankingIgualConAtletletaCambiado(compNueva:Competencia, compVieja:Competencia, a: Atleta, nacio : Pais): bool = 
-%(V y<-[0.. |ranking(compVieja)|)] if ranking(compVieja)[y] != a then ranking(compNueva)[y] == ranking(compVieja)[y] else  atletaIgualConNacionalidadCambiada(ranking(compNueva))[y], ranking(compVieja)[y], pais);
+
+
+
+
+\aux{rankingIgualConAtletletaCambiado}{compNueva, compVieja:Competencia, a: Atleta, nacio: Pais}{Bool} { \newline
+	(\forall y \leftarrow [0..|ranking(compVieja)|)) \newline
+	\hspace*{5mm}	if (ranking(compVieja)[y] != a) then \newline
+	\hspace*{10mm}		ranking(compNueva)[y] == ranking(compVieja)[y] \newline
+	\hspace*{5mm}	else \newline
+	\hspace*{10mm}		atletaIgualConNacionalidadCambiada(ranking(compNueva))[y], ranking(compVieja)[y], pais)
+}
 
 
 
@@ -225,18 +234,6 @@
 	(\forall d \leftarrow deportes(atNuevo)) \newline
 	\hspace*{5mm}	capacidad(atNuevo, d) == capacidad(atViejo, d)	
 }
-
-
-%aux atletaIgualConNacionalidadCambiada(atNuevo, atViejo: Atleta, nacion:Pais): bool =
-%	(ciaNumber(atNuevo) == ciaNumber(atViejo)) &&
-%	(nombre(atNuevo) == nombre(atViejo)) &&
-%	(sexo(atNuevo) == sexo(atViejo)) &&
-%	(añoNacimiento(atNuevo) == añoNacimiento(atViejo)) &&
-%	(deportes(atNuevo) == deportes(atViejo)) &&
-%	(nacionalidad(atNuevo) == nacion) &&
-%	(V d<-deportes(atNuevo))
-%		capacidad(atNuevo, d) == capacidad(atViejo, d)
-%}	
 
 	
 	
