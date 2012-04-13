@@ -36,7 +36,6 @@
 
 \begin{problema}{entrenarNuevoDeporte}{a: Atleta, d: Deporte, c: \ent}{}
 
-	\requiere[nombreDeporteValido]{|d| > 0}
 	\requiere[capacidadEnRango]{0 \leq c \leq 100}
 	\requiere{\neg (d \in deportes(a))}
 	\modifica{a}
@@ -114,7 +113,7 @@
 
 \begin{problema}{medallero}{j: JJOO}{[(pais, [\ent])]}
 	\asegura{mismos(result, [(pais, medalleroNacional(j, pais)) | pais \leftarrow paises(j), \sum medalleroNacional(j, pais) > 0]}
-	\asegura{(\forall i, j \leftarrow [0..|result|-1), i < j)(sgd(result[i])[0] > sgd(result[j])[0]) \lor \\
+	\asegura{(|result| > 1)\rightarrow(\forall i \leftarrow [0..|result|-1), j \leftarrow [0..|result|), i < j)\newline(sgd(result[i])[0] > sgd(result[j])[0]) \lor \\
 	((sgd(result[i])[0] == sgd(result[j])[0]) \land (sgd(result[i])[1] > sgd(result[j])[1])) \lor \\
 	((sgd(result[i])[0] == sgd(result[j])[0]) \land (sgd(result[i])[1] == sgd(result[j])[1]) \land \\
 	(sgd(result[i])[2] \geq sgd(result[j])[2]))}
