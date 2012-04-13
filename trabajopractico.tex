@@ -188,7 +188,7 @@
 		\hspace*{10mm}		(categoria(c2) == categoria(c1)) \land \newline
 		\hspace*{10mm}		(finalizada(c1) == finalizada(c2) \land \newline
 		\hspace*{10mm}		(|participantes(c1)| == |participantes(c2)|) \land \newline
-		\hspace*{10mm}		atletasIgualesExceptoUnAtletaQueSeCambia(c1, c2, a) \land \newline
+		\hspace*{10mm}		atletasIgualesExceptoUnAtletaQueSeCambia(c1, c2, a, p) \land \newline
 		\hspace*{10mm}		(finalizada(c2) \rightarrow \newline
 		\hspace*{15mm}			(rankingIgualConAtletaCambiado(c2, c1, a, p) \land \newline
 		\hspace*{15mm}			lesTocoAntiDopingIgualEnCompetencias(c1, c2) \land \newline
@@ -197,10 +197,9 @@
 
 	\vspace{5mm}
 
-\aux{atletasIgualesExceptoUnAtletaQueSeCambia}{c1, c2: Competencia, a : Atleta}{bool}{\newline(\forall p1 \leftarrow participantes(c1))\newline
-\hspace*{5mm}(\forall p1 \leftarrow participantes(c1))\newline
-\hspace*{10mm}(\exists p2\leftarrow participantes(c2))\newline
-\hspace*{15mm}if p1 != a then p2 == p1 else\newline \hspace*{20mm}atletaIgualConNacionalidadCambiada(p2, p1, p)}
+\aux{atletasIgualesExceptoUnAtletaQueSeCambia}{c1, c2: Competencia, a : Atleta, p: Pais}{bool}{\newline(\forall p1 \leftarrow participantes(c1))\newline
+\hspace*{5mm}(\exists p2\leftarrow participantes(c2))\newline
+\hspace*{10mm}if\hspace*{1mm}p1\hspace*{1mm}!=\hspace*{1mm}a\hspace*{1mm}then\hspace*{1mm} p2\hspace*{1mm}==\hspace*{1mm}p1\hspace*{1mm}else\newline \hspace*{15mm}atletaIgualConNacionalidadCambiada(p2, p1, p)}
 
 \aux{lesTocoControlAntiDopingIgualEnCompetencias}{c1, c2: Competencia}{bool}{\newline
 (|lesTocoControlAntiDoping(c1)| == |lesTocoControlAntidoping(c2)|) \land ((\forall a1 \leftarrow lesTocoControlAntiDoping(c1))\newline
@@ -218,10 +217,10 @@
 
 \aux{rankingIgualConAtletletaCambiado}{compNueva, compVieja:Competencia, a: Atleta, nacio: Pais}{Bool} { \newline
 	(\forall y \leftarrow [0..|ranking(compVieja)|)) \newline
-	\hspace*{5mm}	if (ranking(compVieja)[y] != a) then \newline
+	\hspace*{5mm}	if\hspace*{1mm}(ranking(compVieja)[y] != a)\hspace*{1mm}then \newline
 	\hspace*{10mm}		ranking(compNueva)[y] == ranking(compVieja)[y] \newline
 	\hspace*{5mm}	else \newline
-	\hspace*{10mm}		atletaIgualConNacionalidadCambiada(ranking(compNueva))[y], ranking(compVieja)[y], pais)
+	\hspace*{10mm}		atletaIgualConNacionalidadCambiada(ranking(compNueva))[y], ranking(compVieja)[y], nacio)
 }
 
 
