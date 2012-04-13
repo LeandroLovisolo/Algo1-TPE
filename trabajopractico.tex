@@ -296,8 +296,7 @@
 	\asegura{cantDias(j) == cantDias(pre(j))}
 	\asegura{mismos(atletas(j), atletas(pre(j)))}
 	\asegura{a\tilde{n}o(j) == a\tilde{n}o (pre(j))}
-	\asegura[nuevoDia]{if \hspace{1mm} jornadaActual(pre(j)) == cantDias(pre(j)) \hspace{1mm} then \hspace{1mm} jornadaActual(j) == jornadaActual(pre(j)) \newline
-	else \hspace{1mm} jornadaActual(j) == jornadaActual(pre(j))+1}
+	\asegura[nuevoDia]{ jornadaActual(j) == min(jornadaActual(pre(j)) + 1, cantDias(j)) }
 	\asegura[competenciasMenosElDiaIguales]{(\forall i \leftarrow [1.. cantDias(j)], i \neq jornadaActual(pre(j))) \newline
 	sonSecuenciasDeCompetenciasIguales(cronograma(j, i), cronograma(pre(j), i))}
 	\asegura[mismaCantidadDeCompetenciasEnDiaTranscurrido]{|cronograma(j, jornadaActual(pre(j)))| == \newline
@@ -311,17 +310,19 @@
 	mismos(participantes(c1), participantes(c2)) \land finalizada(c2) \land (|lesTocoControlAntiDoping(c2)| == 1) \land \newline
 	rankingDeCompetencia(c2))}
 	\asegura[menosDel5PorcientoPositivo]{\newline
-	100*|[atle \hspace{1mm} | compe \leftarrow listaDeCompetenciasConCat(j, catListasEnDiaNoFinalizadas(pre(j))),\newline 
-	atle \leftarrow lesTocoControlAntiDoping(compe), leDioPositivo(compe, atle)]| \leq \newline
-	5* |[atle \hspace{1mm} | compe \leftarrow listaDeCompetenciasConCat(j, catListasEnDiaNoFinalizadas(pre(j))),\newline
-	atle \leftarrow lesTocoControlAntiDoping(compe)]|}
+		100*|distintos([atle \hspace{1mm} | compe \leftarrow listaDeCompetenciasConCat(j, catListasEnDiaNoFinalizadas(pre(j))),\newline 
+		atle \leftarrow lesTocoControlAntiDoping(compe), leDioPositivo(compe, atle)])| \leq \newline
+		5* |distintos([atle \hspace{1mm} | compe \leftarrow listaDeCompetenciasConCat(j, catListasEnDiaNoFinalizadas(pre(j))),\newline
+		atle \leftarrow lesTocoControlAntiDoping(compe)])|
+	}
 	
 	\vspace{5mm}
 	\aux{catListasEnDiaNoFinalizadas}{j: JJOO}{[(Deporte, Sexo)]}{\newline
 	[categoria(x)| x \leftarrow cronograma(j, jornadaActual(j)), finalizada(x)]}
 	\aux{listaDeCompenteciasConCat}{j: JJOO, categorias: [(Deporte, Sexo)]}{[Categoria]}{\newline
 	[x | x \leftarrow competencias(j), categoria(x) \in categorias]}
-	\aux{rankingDeCompetencia}{c: Competencia}{\bool}{(|ranking(c)| > 1)\rightarrow(\forall i \leftarrow [0..|ranking(c)|-1))capacidad(ranking(c)[i], prm(c)) \geq capacidad(ranking(c)[i+1], prm(c))}
+	\aux{rankingDeCompetencia}{c: Competencia}{\bool}{(|ranking(c)| > 1)\rightarrow(\forall i \leftarrow [0..|ranking(c)|-1)) \newline
+	capacidad(ranking(c)[i], prm(c)) \geq capacidad(ranking(c)[i+1], prm(c))}
 	
 \end{problema}
 	
