@@ -294,7 +294,7 @@
 \begin{problema}{transcurrirDia}{j: JJOO}{}
 	\modifica{j}
 	\asegura{cantDias(j) == cantDias(pre(j))}
-	\asegura{atletas(j) == atletas(pre(j))}
+	\asegura{mismos(atletas(j), atletas(pre(j)))}
 	\asegura{a\tilde{n}o(j) == a\tilde{n}o (pre(j))}
 	\asegura[nuevoDia]{if \hspace{1mm} jornadaActual(pre(j)) == cantDias(pre(j)) \hspace{1mm} then \hspace{1mm} jornadaActual(j) == jornadaActual(pre(j)) \newline
 	else \hspace{1mm} jornadaActual(j) == jornadaActual(pre(j))+1}
