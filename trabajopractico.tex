@@ -197,10 +197,10 @@
 
 	\vspace{5mm}
 
-%aux atletasIgualesExceptoUnAtletaQueSeCambia(c1, c2: Competencia, a : Atleta) : bool =
-%	(V p1 <- participantes(c1))
-%		(E p2<-participantes(c2))
-%			if p1 != a then p2 == p1 else atletaIgualConNacionalidadCambiada(p2, p1, p);
+\aux{atletasIgualesExceptoUnAtletaQueSeCambia}{c1, c2: Competencia, a : Atleta}{bool}{\newline(V p1 <- participantes(c1))\newline
+\hspace*{10mm}(V p1 <- participantes(c1))\newline
+\hspace*{15mm}(E p2<-participantes(c2))\newline
+\hspace*{20mm}if p1 != a then p2 == p1 else\newline \hspace*{25mm}atletaIgualConNacionalidadCambiada(p2, p1, p)}
 
 %aux lesTocoControlAntiDopingIgualEnCompetencias(c1, c2: Competencia) : bool =
 %	(|lesTocoControlAntiDoping(c1)| == |lesTocoControlAntidoping(c2)|) &&
