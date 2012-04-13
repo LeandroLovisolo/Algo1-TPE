@@ -7,6 +7,8 @@
 \aux{lasQueNoPasaronNoFinalizaron}{j: JJOO}{\bool}{\\(\forall d \selec (jornadaActual(j)..cantDias(j)]) (\forall c \selec cronograma(j, d))\neg finalizada(c)}
 \aux{ordenada}{l:[T]}{\bool}{(\forall i \selec [0.. \longitud{l}-1)) l_i \leq l_{i+1}}
 \aux{sinRepetidos}{l: [T]}{\bool}{(\forall i, j \selec [0.. \longitud{l}), i \neq j) l_i \neq l_j}
+\aux{cuenta}{x: T, a: [T]}{\ent}{long(\comp{y}{y \leftarrow a, y == x})}
+\aux{mismos}{a, b: [T]}{\bool}{|a| == |b| \land (\forall c \in a) cuenta(c, a) == cuenta(c, b)}
 \aux{distintos}{x: [T]}{[T]}{[a[i] | \leftarrow [0..|a|), cuenta(a[i], a[0..i]) == 1]}
 \aux{paises}{j: JJOO}{[Pais]}{distintos([nacionalidad(a)| a \leftarrow atletas(j)])}
 \aux{min}{a, b: \ent}{\ent}{if \hspace{1mm} a < b \hspace{1mm} then \hspace{1mm} a \hspace{1mm} else \hspace{1mm} b}
@@ -17,7 +19,7 @@ mismos(participantes(c1), participantes(c2)) \land \newline
 finalizada(c1) == finalizada(c2) \land \newline
 finalizada(c1) \rightarrow (ranking(c1) == ranking(c2) \land \newline
 mismos(lesTocoControlAntiDoping(c1), lesTocoControlAntiDoping(c2)) \land \newline
-(\forall a \leftarrow lesTocoControlAntiDoping(c1))lesDioPositivo(c1, a) == lesDioPositivo(c2, a)}
+(\forall a \leftarrow lesTocoControlAntiDoping(c1)) lesDioPositivo(c1, a) == lesDioPositivo(c2, a)}
 \aux{sonSecuenciasDeCompetenciasIguales}{s1, s2: [Competencia]}{\bool}{\newline
 ((\forall c1 \leftarrow s1)(\exists c2 \leftarrow s2)sonCompetenciasIguales(c1, c2)) \land (|s1| == |s2|)}
 
