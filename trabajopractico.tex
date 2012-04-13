@@ -197,18 +197,20 @@
 
 	\vspace{5mm}
 
-\aux{atletasIgualesExceptoUnAtletaQueSeCambia}{c1, c2: Competencia, a : Atleta}{bool}{\newline(V p1 <- participantes(c1))\newline
-\hspace*{10mm}(V p1 <- participantes(c1))\newline
-\hspace*{15mm}(E p2<-participantes(c2))\newline
-\hspace*{20mm}if p1 != a then p2 == p1 else\newline \hspace*{25mm}atletaIgualConNacionalidadCambiada(p2, p1, p)}
+\aux{atletasIgualesExceptoUnAtletaQueSeCambia}{c1, c2: Competencia, a : Atleta}{bool}{\newline(\forall p1 \leftarrow participantes(c1))\newline
+\hspace*{5mm}(\forall p1 \leftarrow participantes(c1))\newline
+\hspace*{10mm}(\exists p2\leftarrow participantes(c2))\newline
+\hspace*{15mm}if p1 != a then p2 == p1 else\newline \hspace*{20mm}atletaIgualConNacionalidadCambiada(p2, p1, p)}
 
-%aux lesTocoControlAntiDopingIgualEnCompetencias(c1, c2: Competencia) : bool =
-%	(|lesTocoControlAntiDoping(c1)| == |lesTocoControlAntidoping(c2)|) &&
-%((∀ a1 ← lesTocoControlAntiDoping(c1))
-%(∃ a2 ← lesTocoControlAntiDoping(c2)) ciaNumber(a1) == ciaNumber(a2))
+\aux{lesTocoControlAntiDopingIgualEnCompetencias}{c1, c2: Competencia}{bool}{\newline
+(|lesTocoControlAntiDoping(c1)| == |lesTocoControlAntidoping(c2)|) \land ((\forall a1 \leftarrow lesTocoControlAntiDoping(c1))\newline
+(\exists a2 \leftarrow lesTocoControlAntiDoping(c2)) ciaNumber(a1) == ciaNumber(a2))}
 
 
-%aux leDioPositivoIgualEnCompetencias(c1:Competencia, c2:Competencia) :bool = (V p1<- lesTocoControlAntiDoping(c1)) (E p2<-lesTocoControlAntiDoping(c2), ciaNumber(p1) == ciaNumber(p2)) leDioPositivo(c1,p1) == leDioPositivo(c2,p2); 
+\aux{leDioPositivoIgualEnCompetencias}{c1:Competencia, c2:Competencia} {bool}{\newline
+(\forall p1\leftarrow lesTocoControlAntiDoping(c1))\newline
+\hspace*{5mm}(\exists p2 \leftarrow lesTocoControlAntiDoping(c2), ciaNumber(p1) == ciaNumber(p2))\newline
+\hspace*{10mm}leDioPositivo(c1,p1) == leDioPositivo(c2,p2)} 
 
 
 
