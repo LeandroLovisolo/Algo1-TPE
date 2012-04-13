@@ -36,6 +36,7 @@
 
 \begin{problema}{entrenarNuevoDeporte}{a: Atleta, d: Deporte, c: \ent}{}
 
+	\requiere[nombreDeporteValido]{|d| > 0}
 	\requiere[capacidadEnRango]{0 \leq c \leq 100}
 	\requiere{\neg (d \in deportes(a))}
 	\modifica{a}
@@ -113,7 +114,7 @@
 
 \begin{problema}{medallero}{j: JJOO}{[(pais, [\ent])]}
 	\asegura{mismos(result, [(pais, medalleroNacional(j, pais)) | pais \leftarrow paises(j), \sum medalleroNacional(j, pais) > 0]}
-	\asegura{(|result| > 1)\rightarrow(\forall i \leftarrow [0..|result|-1), j \leftarrow [0..|result|), i < j)\newline(sgd(result[i])[0] > sgd(result[j])[0]) \lor \\
+	\asegura{(\forall i, j \leftarrow [0..|result|-1), i < j)(sgd(result[i])[0] > sgd(result[j])[0]) \lor \\
 	((sgd(result[i])[0] == sgd(result[j])[0]) \land (sgd(result[i])[1] > sgd(result[j])[1])) \lor \\
 	((sgd(result[i])[0] == sgd(result[j])[0]) \land (sgd(result[i])[1] == sgd(result[j])[1]) \land \\
 	(sgd(result[i])[2] \geq sgd(result[j])[2]))}
@@ -173,12 +174,55 @@
 	\asegura{cantDias(j) == cantDias(pre(j))}
 	\asegura{jornadaActual(j) == jornadaActual(pre(j))}
 	\asegura[mismaCantidadDeAtletas]{|atletas(j)| == |atletas(pre(j))|}
-	\asegura[atletasDiferentesNoSeTocan]{ (\forall i \leftarrow atletas(pre(j)), ciaNumber(i) \neq ciaNumber(a))i \in atletas(j)}
+	\asegura[atletasDiferentesNoSeTocan]{ (\forall i \leftarrow atletas(pre(j)), ciaNumber(i) \neq ciaNumber(a)) i \in atletas(j)}
 	\asegura[existeElAtletaConNacionalidadCambiada]{\newline
-	(\exists at \leftarrow atletas(j))atletaIgualConNacionalidadCambiada(at, a, p)}
+		(\exists at \leftarrow atletas(j))atletaIgualConNacionalidadCambiada(at, a, p)}
 	\asegura[mismaCantidadDeCompetenciasXDia]{(\forall i \leftarrow [1..cantDias(j)])|cronograma(j, i)| == |cronograma(pre(j), i)|}
 	\asegura[competenciasQueNoTienenElAtletaNoCambian]{(\forall i \leftarrow [1..cantDias(j)], \newline
-	c1 \leftarrow cronograma(pre(j), i), \lnot (a \in participantes(c1)))(\exists c2 \leftarrow cronograma(j, i))sonCompetenciasIguales(c1, c2)}
+		c1 \leftarrow cronograma(pre(j), i), \lnot (a \in participantes(c1)))(\exists c2 \leftarrow cronograma(j, i))sonCompetenciasIguales(c1, c2)}
+	
+	\asegura[competenciasQueTienenElAtletaSeModifican]{ \newline
+		(\forall i \leftarrow [1..cantDias(j)], c1 \leftarrow cronograma(pre(j), i), a \in participantes(c1)) \newline
+		\hspace*{5mm}	(\exists c2 \leftarrow cronograma(j, i)) \newline
+		\hspace*{10mm}		(categoria(c2) == categoria(c1)) \land \newline
+		\hspace*{10mm}		(finalizada(c1) == finalizada(c2) \land \newline
+		\hspace*{10mm}		(|participantes(c1)| == |participantes(c2)|) \land \newline
+		\hspace*{10mm}		atletasIgualesExceptoUnAtletaQueSeCambia(c1, c2, a) \land \newline
+		\hspace*{10mm}		(finalizada(c2) \rightarrow \newline
+		\hspace*{15mm}			(rankingIgualConAtletaCambiado(c2, c1, a, p) \land \newline
+		\hspace*{15mm}			lesTocoAntiDopingIgualEnCompetencias(c1, c2) \land \newline
+		\hspace*{15mm}			leDioPositivoIgualEnCompetencias(c1, c2))
+	}
+
+
+
+%aux atletasIgualesExceptoUnAtletaQueSeCambia(c1, c2: Competencia, a : Atleta) : bool =
+%	(V p1 <- participantes(c1))
+%		(E p2<-participantes(c2))
+%			if p1 != a then p2 == p1 else atletaIgualConNacionalidadCambiada(p2, p1, p);
+
+%aux lesTocoControlAntiDopingIgualEnCompetencias(c1, c2: Competencia) : bool =
+%	(|lesTocoControlAntiDoping(c1)| == |lesTocoControlAntidoping(c2)|) &&
+%((∀ a1 ← lesTocoControlAntiDoping(c1))
+%(∃ a2 ← lesTocoControlAntiDoping(c2)) ciaNumber(a1) == ciaNumber(a2))
+
+
+%aux leDioPositivoIgualEnCompetencias(c1:Competencia, c2:Competencia) :bool = (V p1<- lesTocoControlAntiDoping(c1)) (E p2<-lesTocoControlAntiDoping(c2), ciaNumber(p1) == ciaNumber(p2)) leDioPositivo(c1,p1) == leDioPositivo(c2,p2); 
+
+%aux rankingIgualConAtletletaCambiado(compNueva:Competencia, compVieja:Competencia, a: Atleta, nacio : Pais): bool = 
+%(V y<-[0.. |ranking(compVieja)|)] if ranking(compVieja)[y] != a then ranking(compNueva)[y] == ranking(compVieja)[y] else  atletaIgualConNacionalidadCambiada(ranking(compNueva))[y], ranking(compVieja)[y], pais);
+%aux atletaIgualConNacionalidadCambiada(atNuevo, atViejo: Atleta, nacion:Pais): bool =
+%(ciaNumber(atNuevo) == ciaNumber(atViejo)) && (nombre(atNuevo) == nombre(atViejo)) && (sexo(atNuevo) == sexo(atViejo)) && (añoNacimiento(atNuevo) == añoNacimiento(atViejo)) && (deportes(atNuevo) == deportes(atViejo)) && (nacionalidad(atNuevo) == nacion) && (V d<-deportes(atNuevo)) capacidad (atNuevo, d) == capacidad(atViejo, d);
+%}	
+
+	
+	
+	
+	
+	
+	
+	
+	
 	
 \end{problema}
 
