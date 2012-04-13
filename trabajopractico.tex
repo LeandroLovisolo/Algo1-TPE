@@ -288,10 +288,15 @@
 \begin{problema}{uyOrdenadoAs\'{i}HayUnPatr\'{o}n}{j: JJOO}{\bool}
 	\asegura{result == hayPatron(j)}
 	
-	\vspace{5mm}
-	\aux{hayPatron}{j: JJOO}{\bool}{(|mp(j)| < 3) \lor \newline
-	(\forall a, b \leftarrow [0..|mp(j)|))mp(j)[a] == mp(j)[b] \rightarrow ((a == 0 \lor b == 0 \lor mp(j)[a-1] == mp(j)[b-1]) \land \newline
-	(a == |mp(j)|-1 \lor b == |mp(j)|-1 \lor mp(j)[a+1] == mp(j)[b+1]))}
+	\medskip
+	\aux{hayPatron}{j: JJOO}{\bool}{
+		(|mp(j)| < 3) \lor \newline
+		(\forall a, b \leftarrow [0..|mp(j)|)) \newline
+		\hspace*{5mm}	mp(j)[a] == mp(j)[b] \rightarrow \newline
+		\hspace*{10mm}		((a == 0 \lor b == 0 \lor mp(j)[a-1] == mp(j)[b-1]) \land \newline
+		\hspace*{10mm}		(a == |mp(j)|-1 \lor b == |mp(j)|-1 \lor mp(j)[a+1] == mp(j)[b+1]))
+	}
+	
 	\aux{mp}{j: JJOO}{[Pais]}{mejoresPaises(j)}
 	\aux{mejoresPaises}{j: JJOO}{[Pais]}{[mejorPaisSinEmpatePorJornada(d) | d \leftarrow [1..jornadaActual(j)]]}
 	\aux{mejorPaisSinEmpatePorJornada}{j: JJOO, d: \ent}{Pais}{cab([pais | pais \leftarrow mejoresPaisesDadaUnaJornada(j, d), \newline
@@ -304,7 +309,7 @@
 	|[True | c \leftarrow cronograma(j, d), finalizada(c), |ranking(c)| > 0, nacionalidad(ranking(c)[0]) == p]|}
 \end{problema}
 
-\begin{problema}{SequiaOlimpica}{j: JJOO}{[Pais]}
+\begin{problema}{sequ\'iaOl\'impica}{j: JJOO}{[Pais]}
 	\asegura{mismos(result, [p | p, p2 \leftarrow paises(j), \newline
 	maximosDiasConsecutivosSinGanar(j, p) \geq maximosDiasConsecutivosSinGanar(j, p2)]}
 	
