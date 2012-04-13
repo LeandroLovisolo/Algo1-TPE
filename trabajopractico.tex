@@ -72,7 +72,6 @@
 \end{problema}
 
 \begin{problema}{linfordChristie}{c: Competencia, a: Atleta}{}
-
 	\requiere{\neg finalizada(c)}
 	\requiere{a \in participantes(c)}
 	\modifica{c}
@@ -85,7 +84,8 @@
 \begin{problema}{gananLosMasCapaces}{c: Competencia}{\bool}
 	\requiere{finalizada(c)}
 	\asegura{result == ( \forall i, j \leftarrow [0.. | ranking(c)|))i \leq j \rightarrow capacidadAtleta(c, i) \geq capacidadAtleta(c, j)}
-	\vspace{5mm}
+	
+	\medskip
 	\aux{capacidadAtleta}{c: Competencia, i: \ent}{\ent}{capacidad(ranking(c)[i], deporteActual(c))}
 	\aux{deporteActual}{c: Competencia}{Deporte}{prm(categoria(c))}
 \end{problema}
@@ -108,21 +108,27 @@
 
 \begin{problema}{dePaseo}{j: JJOO}{[Atleta]}
 	\asegura{mismos(result, [a | a \leftarrow atletas(j), \neg (a \in atletasActivos(j))])}
-	\vspace{5mm}
+
+	\medskip
 	\aux{atletasActivos}{j: JJOO}{[Atleta]}{[a | c \leftarrow competencias(j), a \leftarrow participantes(c)]}
 \end{problema}
 
 \begin{problema}{medallero}{j: JJOO}{[(pais, [\ent])]}
-	\asegura{mismos(result, [(pais, medalleroNacional(j, pais)) | pais \leftarrow paises(j), \sum medalleroNacional(j, pais) > 0]}
-	\asegura{(\forall i, j \leftarrow [0..|result|-1), i < j)(sgd(result[i])[0] > sgd(result[j])[0]) \lor \\
-	((sgd(result[i])[0] == sgd(result[j])[0]) \land (sgd(result[i])[1] > sgd(result[j])[1])) \lor \\
-	((sgd(result[i])[0] == sgd(result[j])[0]) \land (sgd(result[i])[1] == sgd(result[j])[1]) \land \\
+	\asegura{mismos(result,\newline
+		\comp{ (pais, medalleroNacional(j, pais)) }{pais \leftarrow paises(j), \sum medalleroNacional(j, pais) > 0 })}
+	\asegura{(\forall i, j \leftarrow [0..|result|-1), i < j) \newline
+	(sgd(result[i])[0] > sgd(result[j])[0]) \lor \newline
+	((sgd(result[i])[0] == sgd(result[j])[0]) \land (sgd(result[i])[1] > sgd(result[j])[1])) \lor \newline
+	((sgd(result[i])[0] == sgd(result[j])[0]) \, \land \newline \, (sgd(result[i])[1] == sgd(result[j])[1]) \, \land \,
 	(sgd(result[i])[2] \geq sgd(result[j])[2]))}
 	
-	\vspace{5mm}
-	
-	\aux{medalleroNacional}{j: JJOO, pais: Pais}{\ent}{[medallasPorPuestoPorPais(j, puesto, pais) | puesto \leftarrow [1..3]]}
-	\aux{medallasPorPuestoPorPais}{j: JJOO, puesto: \ent, pais: Pais}{\ent}{long([True | c \leftarrow competencias(j), finalizada(c) \land (|ranking(c)| \geq puesto) \land nacionalidad(ranking(c)[puesto - 1]) == pais])}
+	\medskip
+	\aux{medalleroNacional}{j: JJOO, pais: Pais}{\ent}{[medallasPorPuestoPorPais(j, puesto, pais) | puesto \leftarrow [1\twodots 3]]}
+	\aux{medallasPorPuestoPorPais}{j: JJOO, puesto: \ent, pais: Pais}{\ent}{ \newline
+		long([True \, | \, c \leftarrow competencias(j), \newline
+		\hspace*{5mm}	finalizada(c) \land \newline
+		\hspace*{5mm}	(|ranking(c)| \geq puesto) \land \newline
+		\hspace*{5mm}	nacionalidad(ranking(c)[puesto - 1]) == pais])}
 \end{problema} 
 
 \begin{problema}{boicotPorDisciplina}{j: JJOO, cat: (Deporte, Sexo), p: Pais}{\ent}
@@ -131,24 +137,26 @@
 	\asegura{mismos(atletas(j), atletas(pre(j)))}
 	\asegura{cantDias(j) == cantDias(pre(j))}
 	\asegura{jornadaActual(j) == jornadaActual(pre(j))}
-	\asegura{result == if \hspace{1mm} existeTalCompetencia(j, cat) \hspace{1mm} then \\
-	long( [a | a \leftarrow participantes(competenciaBuscada(j, cat)), nacionalidad(a) == p]) \hspace{1mm} else \hspace{1mm} 0}
-	\asegura{(\forall d \leftarrow [1..cantDias(j)]) |cronograma(j, d)| == |cronograma(pre(j), d)|}
-	\asegura{(\forall d \leftarrow [1..cantDias(j)]) sonSecuenciasDeCompetenciasIguales(\newline
+	\asegura{result == \IfThenElse{existeTalCompetencia(j, cat)}{\newline
+	long( [a | a \leftarrow participantes(competenciaBuscada(j, cat)), nacionalidad(a) == p])}{0}}
+	\asegura{(\forall d \leftarrow [1..cantDias(j)]) \, |cronograma(j, d)| == |cronograma(pre(j), d)|}
+	\asegura{(\forall d \leftarrow [1..cantDias(j)]) \, sonSecuenciasDeCompetenciasIguales(\newline
 		[c | c \leftarrow cronograma(j, d), categoria(c) \neq cat], \newline
 		[c | c \leftarrow cronograma(pre(j), d), categoria(c) \neq cat])}
+		
 	\asegura{\lnot existeTalCompetencia(j, cat) \lor \newline
-	(mismos(participantes(competenciaBuscada(j, cat)),\newline
-	\hspace*{5mm} [a | a \leftarrow participantes(competenciaBuscada(pre(j), cat)), nacionalidad(a) \neq p]) \land \newline
-	finalizada(competenciaBuscada(j, cat)) == finalizada(competenciaBuscada(pre(j), cat)) \land \newline
-	finalizada(competenciaBuscada(j, cat)) \rightarrow (ranking(competenciaBuscada(j, cat)) == \newline
-	\hspace*{5mm} [a | a \leftarrow ranking(competenciaBuscada(pre(j), cat)), nacionalidad(a) \neq p] \land \newline
-	mismos([a | a \leftarrow lesTocoControlAntiDoping(competenciaBuscada(pre(j), cat)), nacionalidad(a) \neq p], \newline
-	\hspace*{5mm} lesTocoControlAntiDoping(competenciaBuscada)(j, cat))) \land \newline
-	(\forall a \leftarrow lesTocoControlAntiDoping(competenciaBuscada(j, cat))) \newline
-	\hspace*{5mm} lesDioPositivo(competenciaBuscada(j, cat), a) == lesDioPositivo(competenciaBuscada(pre(j), cat), a)))}
+		(mismos(participantes(competenciaBuscada(j, cat)),\newline
+			\hspace*{5mm}	[a | a \leftarrow participantes(competenciaBuscada(pre(j), cat)), nacionalidad(a) \neq p]) \land \newline
+		finalizada(competenciaBuscada(j, cat)) == finalizada(competenciaBuscada(pre(j), cat)) \land \newline
+		finalizada(competenciaBuscada(j, cat)) \rightarrow \newline
+			\hspace*{5mm}	(ranking(competenciaBuscada(j, cat)) == \newline
+			\hspace*{10mm} 		[a | a \leftarrow ranking(competenciaBuscada(pre(j), cat)), nacionalidad(a) \neq p] \land \newline
+			\hspace*{5mm}	mismos([a | a \leftarrow lesTocoControlAntiDoping(competenciaBuscada(pre(j), cat)), nacionalidad(a) \neq p], \newline
+			\hspace*{10mm} 		lesTocoControlAntiDoping(competenciaBuscada)(j, cat))) \land \newline
+			\hspace*{5mm}	(\forall a \leftarrow lesTocoControlAntiDoping(competenciaBuscada(j, cat))) \newline
+			\hspace*{10mm}		lesDioPositivo(competenciaBuscada(j, cat), a) == lesDioPositivo(competenciaBuscada(pre(j), cat), a)))}
 	
-	\vspace{5mm}
+	\medskip
 	\aux{existeTalCompetencia}{j: JJOO, cat: (Deporte, Sexo)}{\bool}{|[c | c \leftarrow competencias(j), categoria(c) == cat]| > 0}
 	\aux{competenciaBuscada}{j: JJOO, cat: (Deporte, Sexo)}{Categoria}{\newline
 	cab([c | c \leftarrow competencias(j), categoria(c) == cat])}
@@ -156,15 +164,28 @@
 
 
 \begin{problema}{losMasFracasados}{j: JJOO, p: Pais}{[Atleta]}
-	\asegura{mismos(result, [prm(x) | x \leftarrow listaAtletasConMenosGanadas(j, p), \newline
-	(\forall i \leftarrow listaAtletasConMenosGanadas(j, p))sgd(x) \geq sgd(i) \land prm(x) \neq prm(i)]}
-	
-	\vspace{5mm}
-	\aux{listaAtletasConMenosGanadas}{j: JJOO, p: Pais}{[(Atleta, \ent)]}{[(i, noGanoYMedallasNoGanadas(j, i)) | i \leftarrow atletasDelPais(j, p), noGanoYMedallasNoGanadas(j, i) > 0]}
-	\aux{atletasDelPais}{j: JJOO, a: Atleta}{\ent}{if \newline
-	todos([\lnot a \in [x | x \leftarrow [0..min(3, |ranking(c)|))]]) | c \leftarrow competencias(j), finalizada(c) \land a \in ranking(c)]) \newline
-	then \hspace{1mm} |[c | c \leftarrow competencias(j), finalizada(c) \land a \in ranking(c)]| \hspace{1mm} else \hspace{1mm} 0}
-	\aux{noGanoYMedallasNoGanadas}{j: JJOO, a: Atleta}{\ent}{if\hspace{1mm} todos([\lnot(a \in [x| x\leftarrow[0..min(3, |ranking(c)|))]])| c\leftarrow competencias(j), finalizada(c)\hspace{1mm} \land \hspace{1mm} (a \in ranking(c)])\hspace{1mm}then\hspace{1mm} | [c | c\leftarrow competencias(j), finalizada(c) \land (a \in ranking(c))] |\hspace{1mm}else\hspace{1mm} 0}
+	\asegura{
+		mismos(result, \newline
+			\comp{a}{a \leftarrow atletasDelPaisQueNoGanaronMedallas(j, p), \newline
+			\hspace*{5mm}	(\forall a2 \leftarrow atletasDelPaisQueNoGanaronMedallas(j, p)) \newline
+			\hspace*{10mm}		numDeCompetenciasEnLasQueParticipo(a) \geq numDeCompetenciasEnLasQueParticipo(a2)})
+	}
+
+	\medskip
+		
+	\aux{atletasDelPaisQueNoGanaronMedallas}{j: JJOO, p: Pais}{[Atleta]}{ \newline
+		\comp{a}{a \leftarrow atletas(j), nacionalidad(a) == p, noGanoMedallas(j, a)}
+	}
+
+	\aux{numDeCompetenciasEnLasQueParticipo}{j: JJOO, a: Atleta}{\ent}{ \newline
+		|\comp{c}{c \leftarrow competencias(j), finalizada(c), a \in ranking(c)}|
+	}
+
+	\aux{noGanoMedallas}{j: JJOO, a: Atleta}{\bool}{ \newline
+		(\forall c \leftarrow competencias(j), finalizada(c), |ranking(c)| > 0) \newline
+		\hspace*{5mm}	(\forall a2 \leftarrow sub(ranking(c), 0, min(3, |ranking(c)|))) \newline
+		\hspace*{10mm} 		a \neq a2
+	}
 \end{problema}
 
 
@@ -199,7 +220,7 @@
 
 \aux{atletasIgualesExceptoUnAtletaQueSeCambia}{c1, c2: Competencia, a : Atleta, p: Pais}{bool}{\newline(\forall p1 \leftarrow participantes(c1))\newline
 \hspace*{5mm}(\exists p2\leftarrow participantes(c2))\newline
-\hspace*{10mm}if\hspace*{1mm}p1\hspace*{1mm}!=\hspace*{1mm}a\hspace*{1mm}then\hspace*{1mm} p2\hspace*{1mm}==\hspace*{1mm}p1\hspace*{1mm}else\newline \hspace*{15mm}atletaIgualConNacionalidadCambiada(p2, p1, p)}
+\hspace*{10mm}if\hspace*{1mm}p1\hspace*{1mm}\neq\hspace*{1mm}a\hspace*{1mm}then\hspace*{1mm} p2\hspace*{1mm}==\hspace*{1mm}p1\hspace*{1mm}else\newline \hspace*{15mm}atletaIgualConNacionalidadCambiada(p2, p1, p)}
 
 \aux{lesTocoControlAntiDopingIgualEnCompetencias}{c1, c2: Competencia}{bool}{\newline
 (|lesTocoControlAntiDoping(c1)| == |lesTocoControlAntidoping(c2)|) \land ((\forall a1 \leftarrow lesTocoControlAntiDoping(c1))\newline
@@ -217,7 +238,7 @@
 
 \aux{rankingIgualConAtletletaCambiado}{compNueva, compVieja:Competencia, a: Atleta, nacio: Pais}{Bool} { \newline
 	(\forall y \leftarrow [0..|ranking(compVieja)|)) \newline
-	\hspace*{5mm}	if\hspace*{1mm}(ranking(compVieja)[y] != a)\hspace*{1mm}then \newline
+	\hspace*{5mm}	if\hspace*{1mm}(ranking(compVieja)[y] \neq a)\hspace*{1mm}then \newline
 	\hspace*{10mm}		ranking(compNueva)[y] == ranking(compVieja)[y] \newline
 	\hspace*{5mm}	else \newline
 	\hspace*{10mm}		atletaIgualConNacionalidadCambiada(ranking(compNueva))[y], ranking(compVieja)[y], nacio)
