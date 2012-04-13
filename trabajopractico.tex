@@ -163,6 +163,7 @@
 	\aux{atletasDelPais}{j: JJOO, a: Atleta}{\ent}{if \newline
 	todos([\lnot a \in [x | x \leftarrow [0..min(3, |ranking(c)|))]]) | c \leftarrow competencias(j), finalizada(c) \land a \in ranking(c)]) \newline
 	then \hspace{1mm} |[c | c \leftarrow competencias(j), finalizada(c) \land a \in ranking(c)]| \hspace{1mm} else \hspace{1mm} 0}
+	\aux{noGanoYMedallasNoGanadas}{j: JJOO, a: Atleta}{\ent}{if\hspace{1mm} todos([\lnot(a \in [x| x\leftarrow[0..min(3, |ranking(c)|))]])| c\leftarrow competencias(j), finalizada(c)\hspace{1mm} \land \hspace{1mm} (a \in ranking(c)])\hspace{1mm}then\hspace{1mm} | [c | c\leftarrow competencias(j), finalizada(c) \land a \in ranking(c))] |\hspace{1mm}else\hspace{1mm} 0}
 \end{problema}
 
 
