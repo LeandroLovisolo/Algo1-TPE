@@ -164,6 +164,7 @@
 	\aux{atletasDelPais}{j: JJOO, a: Atleta}{\ent}{if \newline
 	todos([\lnot a \in [x | x \leftarrow [0..min(3, |ranking(c)|))]]) | c \leftarrow competencias(j), finalizada(c) \land a \in ranking(c)]) \newline
 	then \hspace{1mm} |[c | c \leftarrow competencias(j), finalizada(c) \land a \in ranking(c)]| \hspace{1mm} else \hspace{1mm} 0}
+	\aux{noGanoYMedallasNoGanadas}{j: JJOO, a: Atleta}{\ent}{if\hspace{1mm} todos([\lnot(a \in [x| x\leftarrow[0..min(3, |ranking(c)|))]])| c\leftarrow competencias(j), finalizada(c)\hspace{1mm} \land \hspace{1mm} (a \in ranking(c)])\hspace{1mm}then\hspace{1mm} | [c | c\leftarrow competencias(j), finalizada(c) \land (a \in ranking(c))] |\hspace{1mm}else\hspace{1mm} 0}
 \end{problema}
 
 
@@ -259,10 +260,10 @@
 
 \begin{problema}{SequiaOlimpica}{j: JJOO}{[Pais]}
 	\asegura{mismos(result, [p | p, p2 \leftarrow paises(j), \newline
-	maximosDiasConsecutivosSinGanar(p) \geq maximosDiasConsecutivosSinGanar(p2)]}
+	maximosDiasConsecutivosSinGanar(j, p) \geq maximosDiasConsecutivosSinGanar(j, p2)]}
 	
 	\vspace{5mm}
-	\aux{maximosDiasConsecutivosSinGanar}{p: Pais}{\ent}{max([|victorias(j, p)[x..y]| \hspace{1mm} | x, y \leftarrow [0..|victorias(j, p)|), x \leq y, (\forall v \leftarrow victorias(j, p)[x..y])v == False])}
+	\aux{maximosDiasConsecutivosSinGanar}{j: JJOO, p: Pais}{\ent}{max([|victorias(j, p)[x..y]| \hspace{1mm} | x, y \leftarrow [0..|victorias(j, p)|), x \leq y, (\forall v \leftarrow victorias(j, p)[x..y])v == False])}
 	\aux{victorias}{j: JJOO, p: Pais}{[\bool]}{[ganoEnTalDia(j, d, p) | d \leftarrow [1..jornadaActual(j)]]}
 	\aux{ganoEnTalDia}{j: JJOO, d: \ent, p: Pais}{\bool}{(\exists c \leftarrow cronograma(j, d), finalizada(c)) \newline
 	p \in [nacionalidad(ranking(c)[i]) | i \leftarrow [0..min(3, |ranking(c)|))]}
@@ -278,7 +279,6 @@
 	else \hspace{1mm} jornadaActual(j) == jornadaActual(pre(j))+1}
 	\asegura[competenciasMenosElDiaIguales]{(\forall i \leftarrow [1.. cantDias(j)], i \neq jornadaActual(pre(j))) \newline
 	sonSecuenciasDeCompetenciasIguales(cronograma(j, i), cronograma(pre(j), i))}
-	\asegura{mismos(competencias(j), competencias(pre(j)))}
 	\asegura[mismaCantidadDeCompetenciasEnDiaTranscurrido]{|cronograma(j, jornadaActual(pre(j)))| == \newline
 	|cronograma(pre(j), jornadaActual(pre(j)))|}
 	\asegura[competenciasFinalizadasEnElDiaNoSeTocan]{\newline
@@ -298,9 +298,9 @@
 	\vspace{5mm}
 	\aux{catListasEnDiaNoFinalizadas}{j: JJOO}{[(Deporte, Sexo)]}{\newline
 	[categoria(x)| x \leftarrow cronograma(j, jornadaActual(j)), finalizada(x)]}
-	\aux{lisaDeCompenteciasConCat}{j: JJOO, categorias: [(Deporte, Sexo)]}{[Categoria]}{\newline
+	\aux{listaDeCompenteciasConCat}{j: JJOO, categorias: [(Deporte, Sexo)]}{[Categoria]}{\newline
 	[x | x \leftarrow competencias(j), categoria(x) \in categorias]}
-	\aux{rankingDeCompetencia}{c: Competencia}{\bool}{(\forall i \leftarrow [0..|ranking(c)|-1))capacidad(ranking(c)[i], prm(c)) \geq capacidad(ranking(c)[i+1], prm(c))}
+	\aux{rankingDeCompetencia}{c: Competencia}{\bool}{(|ranking(c)| > 1)\rightarrow(\forall i \leftarrow [0..|ranking(c)|-1))capacidad(ranking(c)[i], prm(c)) \geq capacidad(ranking(c)[i+1], prm(c))}
 	
 \end{problema}
 	
