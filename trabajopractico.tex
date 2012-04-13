@@ -125,7 +125,7 @@
 	\aux{medallasPorPuestoPorPais}{j: JJOO, puesto: \ent, pais: Pais}{\ent}{long([True | c \leftarrow competencias(j), finalizada(c) \land (|ranking(c)| \geq puesto) \land nacionalidad(ranking(c)[puesto - 1]) == pais])}
 \end{problema} 
 
-\begin{problema}{boicotPorDiciplina}{j: JJOO, cat: (Deporte, Sexo), p: Pais}{\ent}
+\begin{problema}{boicotPorDisciplina}{j: JJOO, cat: (Deporte, Sexo), p: Pais}{\ent}
 	\modifica{j}
 	\asegura{a\tilde{n}o(j) == a\tilde{n}o(pre(j))}
 	\asegura{mismos(atletas(j), atletas(pre(j)))}
@@ -133,9 +133,10 @@
 	\asegura{jornadaActual(j) == jornadaActual(pre(j))}
 	\asegura{result == if \hspace{1mm} existeTalCompetencia(j, cat) \hspace{1mm} then \\
 	long( [a | a \leftarrow participantes(competenciaBuscada(j, cat)), nacionalidad(a) == p]) \hspace{1mm} else \hspace{1mm} 0}
-	\asegura{|competencias(j)| == |competencias(pre(j))|}
-	\asegura{sonSecuenciasDeCompetenciasIguales([c | c \leftarrow competencias(j), categoria(c) \neq cat], \newline
-	[c | c \leftarrow competencias(pre(j)), categoria(c) \neq cat])}
+	\asegura{(\forall d \leftarrow [1..cantDias(j)]) |cronograma(j, d)| == |cronograma(pre(j), d)|}
+	\asegura{(\forall d \leftarrow [1..cantDias(j)]) sonSecuenciasDeCompetenciasIguales(\newline
+		[c | c \leftarrow cronograma(j, d), categoria(c) \neq cat], \newline
+		[c | c \leftarrow cronograma(pre(j), d), categoria(c) \neq cat])}
 	\asegura{\lnot existeTalCompetencia(j, cat) \lor \newline
 	(mismos(participantes(competenciaBuscada(j, cat)),\newline
 	\hspace*{5mm} [a | a \leftarrow participantes(competenciaBuscada(pre(j), cat)), nacionalidad(a) \neq p]) \land \newline
