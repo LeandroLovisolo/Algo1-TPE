@@ -97,7 +97,7 @@
 	\asegura{categoria(pre(c)) == categoria(c)}
 	\asegura{mismos(participantes(pre(c)), participantes(c))}
 	\asegura{finalizada(pre(c)) == finalizada(c)}
-	\asegura{ranking(c) == [a | a \leftarrow ranking(pre(c)), \neg (a \in (lesTocoControlAntiDoping(c) \wedge leDioPositivo(c, a))]}
+	\asegura{ranking(c) == [a | a \leftarrow ranking(pre(c)), \neg ((a \in lesTocoControlAntiDoping(c)) \wedge leDioPositivo(c, a))]}
 	\asegura{mismos(lesTocoControlAntiDoping(c), lesTocoControlAntiDoping(pre(c))}
 	\asegura{(\forall a \leftarrow lesTocoControlAntidoping(c)) lesDioPositivo(c, a) == lesDioPositivo(pre(c), a)}
 \end{problema}
@@ -241,7 +241,7 @@
 
 
 
-\aux{rankingIgualConAtletletaCambiado}{compNueva, compVieja:Competencia, a: Atleta, nacio: Pais}{Bool} { \newline
+\aux{rankingIgualConAtletaCambiado}{compNueva, compVieja:Competencia, a: Atleta, nacio: Pais}{Bool} { \newline
 	(\forall y \leftarrow [0..|ranking(compVieja)|)) \newline
 		\hspace*{5mm} \IfThenElse
 			{ranking(compVieja)[y] \neq a \newline \hspace*{5mm}}
@@ -310,14 +310,14 @@
 \end{problema}
 
 \begin{problema}{sequ\'iaOl\'impica}{j: JJOO}{[Pais]}
-	\asegura{mismos(result, [p | p, p2 \leftarrow paises(j), \newline
-	maximosDiasConsecutivosSinGanar(j, p) \geq maximosDiasConsecutivosSinGanar(j, p2)]}
+	\asegura{mismos(result, distintos([p | p, p2 \leftarrow paises(j), \newline
+	maximosDiasConsecutivosSinGanar(j, p) \geq maximosDiasConsecutivosSinGanar(j, p2)]))}
 	
 	\vspace{5mm}
 	\aux{maximosDiasConsecutivosSinGanar}{j: JJOO, p: Pais}{\ent}{ \newline
-	max([|victorias(j, p)[x..y]| \hspace{1mm} | x, y \leftarrow [0..|victorias(j, p)|), x \leq y, (\forall v \leftarrow victorias(j, p)[x..y])v == False])}
+	maxLista([|victorias(j, p)[x..y]| \hspace{1mm} | x, y \leftarrow [0..|victorias(j, p)|), x \leq y, (\forall v \leftarrow victorias(j, p)[x..y])v == False])}
 	\aux{victorias}{j: JJOO, p: Pais}{[\bool]}{[ganoEnTalDia(j, d, p) | d \leftarrow [1..jornadaActual(j)]]}
-	\aux{ganoEnTalDia}{j: JJOO, d: \ent, p: Pais}{\bool}{(\exists c \leftarrow cronograma(j, d), finalizada(c)) \newline
+	\aux{ganoEnTalDia}{j: JJOO, d: \ent, p: Pais}{\bool}{(\exists c \leftarrow cronograma(j, d), finalizada(c), |ranking(c)|>0) \newline
 	p \in [nacionalidad(ranking(c)[i]) | i \leftarrow [0..min(3, |ranking(c)|))]}
 \end{problema}
 
@@ -358,7 +358,7 @@
 	
 	\vspace{5mm}
 	\aux{listaDeCategoriasNoFinalizadasDeCompetenciasViejas}{j: JJOO}{[(Deporte, Sexo)]}{\newline
-	[categoria(x)| x \leftarrow cronograma(j, jornadaActual(j)), \not finalizada(x)]}
+	[categoria(x)| x \leftarrow cronograma(j, jornadaActual(j)), \lnot finalizada(x)]}
 	\aux{listaDeCompenteciasConCat}{j: JJOO, categorias: [(Deporte, Sexo)]}{[Categoria]}{\newline
 	[x | x \leftarrow competencias(j), categoria(x) \in categorias]}
 	\aux{rankingDeCompetencia}{c: Competencia}{\bool}{(|ranking(c)| > 1)\rightarrow(\forall i \leftarrow [0..|ranking(c)|-1)) \newline

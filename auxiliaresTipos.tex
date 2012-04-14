@@ -13,6 +13,7 @@
 \aux{paises}{j: JJOO}{[Pais]}{distintos([nacionalidad(a)| a \leftarrow atletas(j)])}
 \aux{min}{a, b: \ent}{\ent}{if \hspace{1mm} a < b \hspace{1mm} then \hspace{1mm} a \hspace{1mm} else \hspace{1mm} b}
 \aux{max}{a, b: \ent}{\ent}{if \hspace{1mm} a > b \hspace{1mm} then \hspace{1mm} a \hspace{1mm} else \hspace{1mm} b}
+\aux{maxLista}{a: [\ent]}{\ent}{ cab([x | x \leftarrow a, (\forall y \leftarrow a) x \geq y)]) }
 \aux{sonCompetenciasIguales}{c1, c2: Competencia}{\bool}{\newline
 categoria(c1) == categoria(c2) \land \newline
 mismos(participantes(c1), participantes(c2)) \land \newline
